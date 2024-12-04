@@ -99,7 +99,7 @@ function Artists() {
           table?.classList.add('d-flex');
           loading?.classList.add('d-none');
   
-          alert("Asset created successfully!");
+          alert("Artist created successfully!");
           window.location.reload();
         }
 
@@ -148,7 +148,7 @@ function Artists() {
         table?.classList.add('d-flex');
         loading?.classList.add('d-none');
 
-        alert("Asset deleted successfully!");
+        alert("Artist deleted successfully!");
         window.location.reload();
       }
 
@@ -160,8 +160,60 @@ function Artists() {
     }
   }
 
-  function updateArtist() {
-    
+  async function updateArtist(name: string) {
+    const country = window.prompt("Enter new country name:");
+    if (country === null) return;
+
+    if (!country) {
+      alert("New country name must not be empty!");
+    } else {
+      const table = document.querySelector('.table-container');
+      const loading = document.querySelector('.loading-container');
+
+      table?.classList.add('d-none');
+      loading?.classList.remove('d-none');
+      loading?.classList.add('d-flex');
+
+      const requestJson = {
+        "update": {
+          "@assetType": "artist",
+          "name": `${name}`,
+          "country": `${country}`
+        }
+      };
+
+      try {
+        const response = await fetch('http://ec2-54-91-215-149.compute-1.amazonaws.com/api/invoke/updateAsset', {
+          'method': 'PUT',
+          'headers': {
+            'Authorization': `Basic ${credentials}`,
+            'Content-Type': 'application/json'
+          },
+          'body': JSON.stringify(requestJson),
+          'credentials': 'omit'
+        });
+
+        if (!response.ok) {
+          loading?.classList.remove('d-flex');
+          loading?.classList.add('d-none');
+
+          throw new Error(`Error fetching data. Status: ${response.statusText}`);
+        } else {
+          table?.classList.remove('d-none');
+          table?.classList.add('d-flex');
+          loading?.classList.add('d-none');
+
+          alert("Country name updated successfully!");
+          window.location.reload();
+        }
+
+      } catch (ex) {
+        const err = ex as Error;
+
+        setLoading(true);
+        setError(err.message);
+      }
+    }
   }
   
   return (
@@ -178,7 +230,6 @@ function Artists() {
           <table key={index}>
             <thead>
               <tr>
-                <td>Type</td>
                 <td>Country</td>
                 <td>Name</td>
                 <td></td>
@@ -186,10 +237,9 @@ function Artists() {
             </thead>
             <tbody>
               <tr>
-                <td>Artist</td>
                 <td>{item.country}</td>
                 <td>{item.name}</td>
-                <td><button>edit</button><button onClick={() => deleteArtist(item.name)}>delete</button></td>
+                <td><button onClick={() => updateArtist(item.name)}>edit</button><button onClick={() => deleteArtist(item.name)}>delete</button></td>
               </tr>
             </tbody>
           </table>

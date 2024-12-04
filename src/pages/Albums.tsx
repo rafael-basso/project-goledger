@@ -63,24 +63,19 @@ function Albums() {
           <table key={index}>
             <thead>
               <tr>
-                <td>Type</td>
                 <td>Name</td>
                 <td>Year</td>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Album</td>
                 <td>{item.name}</td>
                 <td>{item.year}</td>
               </tr>
             </tbody>
           </table>
         ))}        
-      </div>
-      <Link to="/">
-            <strong>Artists</strong>            
-      </Link>
+      </div>      
       {loading && (<p>{error}</p>)}
     </>
   );

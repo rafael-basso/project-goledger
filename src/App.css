@@ -49,20 +49,6 @@ tbody tr:nth-child(even) {
   background-color: #f8f9fa;
 }
 
-/* Responsive Design */
-@media screen and (max-width: 600px) {
-  table {
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
-  }
-  
-  th, td {
-      padding: 8px 10px;
-      font-size: 0.9em;
-  }
-}
-
 /* Optional: First Column Emphasis */
 tbody tr td:first-child {
   font-weight: 500;
@@ -128,14 +114,25 @@ th.sortable:hover {
   100% { transform: rotate(360deg); }
 }
 
-/* Optional: Add some responsive design */
 @media (max-width: 600px) {
   .spinner {
       width: 40px;
       height: 40px;
-  }
+    }
   
-  .loading-text {
+    .loading-text {
       font-size: 1em;
-  }
+    }
+  
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  
+    th,
+    td {
+      padding: 8px 10px;
+      font-size: 0.9em;
+    }
 }
