@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       const credentials = btoa(`${process.env.REACT_APP_API_USER}:${process.env.REACT_APP_API_PASSWD}`);
-      console.log(process.env.REACT_APP_API_USER,process.env.REACT_APP_API_PASSWD);
+      
       try {
         const response = await fetch('http://ec2-54-91-215-149.compute-1.amazonaws.com/api/query/getSchema', {
           'method': 'GET',
@@ -58,6 +58,7 @@ function App() {
                 <td>Dynamic</td>
                 <td>Label</td>
                 <td>Writers</td>
+                <td><button>Add new {item.tag}</button></td>
               </tr>
             </thead>
             <tbody>
@@ -67,6 +68,7 @@ function App() {
                 <td>{item.dynamic ? 'true' : 'false'}</td>
                 <td>{item.label}</td>
                 <td>{item.writers ?? 'no content'}</td>
+                <td><button>edit</button><button>delete</button></td>
               </tr>
             </tbody>
           </table>
