@@ -16,8 +16,8 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const credentials = btoa('psAdmin:goledger');
-
+      const credentials = btoa(`${process.env.REACT_APP_API_USER}:${process.env.REACT_APP_API_PASSWD}`);
+      console.log(process.env.REACT_APP_API_USER,process.env.REACT_APP_API_PASSWD);
       try {
         const response = await fetch('http://ec2-54-91-215-149.compute-1.amazonaws.com/api/query/getSchema', {
           'method': 'GET',
@@ -28,7 +28,7 @@ function App() {
           'credentials': 'omit'
         });
 
-        if (!response.ok) throw new Error(`Error fetching data. Status ${response.statusText}`);
+        if (!response.ok) throw new Error(`Error fetching data. Status: ${response.statusText}`);
 
         const result = await response.json();
         setData(result);
