@@ -109,6 +109,18 @@ th.sortable:hover {
   margin-top: 10px;
 }
 
+.table-container table {
+  margin: 0;
+}
+
+.table-container table thead tr td {
+  width: 33%;
+}
+
+.table-container input {
+  margin: 0 0 15px 15px;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

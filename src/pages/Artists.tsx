@@ -12,6 +12,8 @@ function Artists() {
   const [artist, setArtist] = useState<Artist[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredArtists, setFilteredArtists] = useState<Artist[]>([]);
   const credentials = btoa(`${process.env.REACT_APP_API_USER}:${process.env.REACT_APP_API_PASSWD}`);
 
   useEffect(() => {
@@ -40,6 +42,7 @@ function Artists() {
         const res = await response.json();
         // console.log(res.result);
         setArtist(res.result);
+        setFilteredArtists(res.result);
       } catch (ex) {
         const err = ex as Error;
         
@@ -50,6 +53,13 @@ function Artists() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const results = artist.filter((artist) =>
+      artist.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredArtists(results);
+  }, [searchTerm, artist]);
 
   async function createArtist() {
     const name = window.prompt("Enter name:");
@@ -226,7 +236,13 @@ function Artists() {
           </Link>
         </div>
         <button onClick={createArtist}>Create new artist</button>
-        {artist.map((item: Artist, index: number) => (
+        <input
+          type="text"
+          placeholder="Search by name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        {filteredArtists.map((item: Artist, index: number) => (
           <table key={index}>
             <thead>
               <tr>
@@ -250,6 +266,7 @@ function Artists() {
         <div className="loading-text">Loading...</div>
     </div>
     {loading && (<p>{error}</p>)}
+    {filteredArtists.length === 0 && <p>No artists found.</p>}
     </>
   );
 }
