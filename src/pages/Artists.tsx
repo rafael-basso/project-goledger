@@ -89,14 +89,20 @@ function Artists() {
           'credentials': 'omit'
         });
 
-        if (!response.ok) throw new Error(`Error fetching data. Status: ${response.statusText}`);
+        if (!response.ok) {   
+          loading?.classList.remove('d-flex');
+          loading?.classList.add('d-none');
 
-        table?.classList.remove('d-none');
-        table?.classList.add('d-flex');
-        loading?.classList.add('d-none');
+          throw new Error(`Error fetching data. Status: ${response.statusText}`);
+        } else {
+          table?.classList.remove('d-none');
+          table?.classList.add('d-flex');
+          loading?.classList.add('d-none');
+  
+          alert("Asset created successfully!");
+          window.location.reload();
+        }
 
-        alert("Asset created successfully!");
-        window.location.reload();
       } catch (ex) {
         const err = ex as Error;
 
@@ -106,8 +112,52 @@ function Artists() {
     }
   }
 
-  function deleteArtist() {
+  async function deleteArtist(name: string) {
+    const table = document.querySelector('.table-container');
+    const loading = document.querySelector('.loading-container');
 
+    table?.classList.add('d-none');
+    loading?.classList.remove('d-none');
+    loading?.classList.add('d-flex');
+
+    const requestJson = {
+      "key": {
+        "@assetType": "artist",
+        "name": `${name}`
+      }
+    };
+
+    try {
+      const response = await fetch('http://ec2-54-91-215-149.compute-1.amazonaws.com/api/invoke/deleteAsset', {
+        'method': 'DELETE',
+        'headers': {
+          'Authorization': `Basic ${credentials}`,
+          'Content-Type': 'application/json'
+        },
+        'body': JSON.stringify(requestJson),
+        'credentials': 'omit'
+      });
+
+      if (!response.ok) {   
+        loading?.classList.remove('d-flex');
+        loading?.classList.add('d-none');
+
+        throw new Error(`Error fetching data. Status: ${response.statusText}`);
+      } else {
+        table?.classList.remove('d-none');
+        table?.classList.add('d-flex');
+        loading?.classList.add('d-none');
+
+        alert("Asset deleted successfully!");
+        window.location.reload();
+      }
+
+    } catch (ex) {
+      const err = ex as Error;
+
+      setLoading(true);
+      setError(err.message);
+    }
   }
 
   function updateArtist() {
@@ -139,17 +189,17 @@ function Artists() {
                 <td>Artist</td>
                 <td>{item.country}</td>
                 <td>{item.name}</td>
-                <td><button>edit</button><button>delete</button></td>
+                <td><button>edit</button><button onClick={() => deleteArtist(item.name)}>delete</button></td>
               </tr>
             </tbody>
           </table>
         ))}        
-        {loading && (<p>{error}</p>)}
       </div>
       <div className="loading-container d-none">
         <div className="spinner"></div>
         <div className="loading-text">Loading...</div>
     </div>
+    {loading && (<p>{error}</p>)}
     </>
   );
 }
