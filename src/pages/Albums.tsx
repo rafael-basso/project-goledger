@@ -6,7 +6,7 @@ function Albums() {
   interface Album {
     name: string;
     year: number;
-    artist: {"@key": string}
+    artist: { "@key": string }
   }
 
   const [album, setAlbum] = useState<Album[]>([]);
@@ -261,7 +261,10 @@ function Albums() {
       <div className='title'>
           <h1>ALBUMS</h1>
           <Link to="/">
-            <strong>Go to Artists</strong>
+            <strong>Go to ARTISTS</strong>
+          </Link>
+          <Link to="/song">
+            <strong>Go to SONGS</strong>
           </Link>
         </div>
         <button onClick={createAlbum}>Create new album</button>

@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router'
 import '../App.css';
-import { count } from 'console';
 
 function Artists() {
   interface Artist {
@@ -232,7 +231,10 @@ function Artists() {
         <div className='title'>
           <h1>ARTISTS</h1>
           <Link to="/album">
-            <strong>Go to Albums</strong>
+            <strong>Go to ALBUMS</strong>
+          </Link>
+          <Link to="/song">
+            <strong>Go to SONGS</strong>
           </Link>
         </div>
         <button onClick={createArtist}>Create new artist</button>

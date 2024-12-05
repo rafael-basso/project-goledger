@@ -121,6 +121,15 @@ th.sortable:hover {
   margin: 0 0 15px 15px;
 }
 
+a {
+  text-decoration: none;
+  color: gray;
+}
+
+a:hover {
+  color: darkgray;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
