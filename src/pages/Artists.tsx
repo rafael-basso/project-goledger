@@ -55,8 +55,8 @@ function Artists() {
   }, []);
 
   useEffect(() => {
-    const results = artist.filter((artist) =>
-      artist.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const results = artist.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredArtists(results);
   }, [searchTerm, artist]);
@@ -259,14 +259,14 @@ function Artists() {
               </tr>
             </tbody>
           </table>
-        ))}        
+        ))}
       </div>
       <div className="loading-container d-none">
         <div className="spinner"></div>
         <div className="loading-text">Loading...</div>
-    </div>
-    {loading && (<p>{error}</p>)}
-    {filteredArtists.length === 0 && <p>No artists found.</p>}
+      </div>
+      {loading && (<p>{error}</p>)}
+      {filteredArtists.length === 0 && <p>No artists found.</p>}
     </>
   );
 }
