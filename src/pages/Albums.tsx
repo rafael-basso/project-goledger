@@ -6,6 +6,7 @@ function Albums() {
   interface Album {
     name: string;
     year: number;
+    "@key": string;
     artist: { "@key": string }
   }
 
@@ -288,7 +289,7 @@ function Albums() {
             </thead>
             <tbody>
               <tr>
-                <td>{item.name}</td>
+                <td>{item.name}<p>{item['@key']}</p></td>
                 <td>{item.year}</td>
                 <td><button onClick={() => updateAlbum(item.name, item.artist["@key"])}>edit</button><button onClick={() => deleteAlbum(item.name, item.artist["@key"])}>delete</button></td>
               </tr>

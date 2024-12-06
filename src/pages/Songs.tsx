@@ -5,6 +5,7 @@ import '../App.css';
 function Songs() {
   interface Song {
     name: string;
+    "@key": string;
     album: { "@key": string }
   }
 
@@ -208,7 +209,7 @@ function Songs() {
             </thead>
             <tbody>
               <tr>
-                <td>{item.name}</td>
+                <td>{item.name}<p>{item['@key']}</p></td>
                 <td><button onClick={() => deleteSong(item.name, item.album["@key"])}>delete</button></td>
               </tr>
             </tbody>

@@ -6,6 +6,7 @@ function Artists() {
   interface Artist {
     country: string;
     name: string;
+    "@key": string;
   }
 
   const [artist, setArtist] = useState<Artist[]>([]);
@@ -39,7 +40,7 @@ function Artists() {
         if (!response.ok) throw new Error(`Error fetching data. Status: ${response.statusText}`);
 
         const res = await response.json();
-        // console.log(res.result);
+        console.log(res.result);
         setArtist(res.result);
         setFilteredArtists(res.result);
       } catch (ex) {
@@ -259,7 +260,7 @@ function Artists() {
             <tbody>
               <tr>
                 <td>{item.country}</td>
-                <td>{item.name}</td>
+                <td>{item.name}<p>{item['@key']}</p></td>
                 <td><button onClick={() => updateArtist(item.name)}>edit</button><button onClick={() => deleteArtist(item.name)}>delete</button></td>
               </tr>
             </tbody>
