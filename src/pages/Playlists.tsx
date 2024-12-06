@@ -6,7 +6,7 @@ import BasicModal from '../components/Modal';
 function Playlists() {
   interface Playlist {
     name: string;
-    songs?: [{ "@key": string }];
+    songs?: { "@key": string }[];
   }
 
   const [playlist, setPlaylist] = useState<Playlist[]>([]);
@@ -170,6 +170,67 @@ function Playlists() {
       setError(err.message);
     }
   }
+
+  async function addSong(playlist: Playlist) {
+    const newSong = window.prompt("Enter song ID:");
+    if (newSong === null) return;
+
+    const newSongJson = {
+        "@assetType": "song" ,
+        "@key": newSong
+    }
+
+    playlist.songs?.push(newSongJson);
+
+    const table = document.querySelector('.table-container');
+    const loading = document.querySelector('.loading-container');
+
+    table?.classList.add('d-none');
+    loading?.classList.remove('d-none');
+    loading?.classList.add('d-flex');
+
+    const requestJson = {
+      "update": {
+          "@assetType": "playlist",
+          "name": `${playlist.name}`,
+          "songs": playlist.songs
+      }
+    };
+
+    console.log(requestJson);
+ 
+    try {
+      const response = await fetch('http://ec2-54-91-215-149.compute-1.amazonaws.com/api/invoke/updateAsset', {
+        'method': 'PUT',
+        'headers': {
+          'Authorization': `Basic ${credentials}`,
+          'Content-Type': 'application/json'
+        },
+        'body': JSON.stringify(requestJson),
+        'credentials': 'omit'
+      });
+
+      if (!response.ok) {
+        loading?.classList.remove('d-flex');
+        loading?.classList.add('d-none');
+
+        throw new Error(`Error fetching data. Status: ${response.statusText}`);
+      } else {
+        table?.classList.remove('d-none');
+        table?.classList.add('d-flex');
+        loading?.classList.add('d-none');
+
+        alert("Song added successfully!");
+        window.location.reload();
+      }
+
+    } catch (ex) {
+      const err = ex as Error;
+
+      setLoading(true);
+      setError(err.message);
+    }
+  }
   
   return (
     <>
@@ -210,7 +271,7 @@ function Playlists() {
                 ))}</td>
                 <td>
                   <button onClick={() => deletePlaylist(item.name)}>delete</button>
-                  {/* <BasicModal /> */}
+                  <button onClick={() => addSong(item)}>add song</button>
                 </td>
               </tr>
             </tbody>
