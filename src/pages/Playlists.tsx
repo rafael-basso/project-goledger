@@ -1,18 +1,19 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router'
 import '../App.css';
+import BasicModal from '../components/Modal';
 
-function Artists() {
-  interface Artist {
-    country: string;
+function Playlists() {
+  interface Playlist {
     name: string;
+    songs?: [{ "@key": string }];
   }
 
-  const [artist, setArtist] = useState<Artist[]>([]);
+  const [playlist, setPlaylist] = useState<Playlist[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredArtists, setFilteredArtists] = useState<Artist[]>([]);
+  const [filteredPlaylist, setFilteredPlaylist] = useState<Playlist[]>([]);
   const credentials = btoa(`${process.env.REACT_APP_API_USER}:${process.env.REACT_APP_API_PASSWD}`);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ function Artists() {
       const search = {
         "query": {
           "selector": {
-            "@assetType": "artist"
+            "@assetType": "playlist"
           }
         }
       };
@@ -40,11 +41,11 @@ function Artists() {
 
         const res = await response.json();
         // console.log(res.result);
-        setArtist(res.result);
-        setFilteredArtists(res.result);
+        setPlaylist(res.result);
+        setFilteredPlaylist(res.result);
       } catch (ex) {
         const err = ex as Error;
-        
+
         setLoading(true);
         setError(err.message);
       }
@@ -54,21 +55,21 @@ function Artists() {
   }, []);
 
   useEffect(() => {
-    const results = artist.filter((item) =>
+    const results = playlist.filter((item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredArtists(results);
-  }, [searchTerm, artist]);
+    setFilteredPlaylist(results);
+  }, [searchTerm, playlist]);
 
-  async function createArtist() {
-    const name = window.prompt("Enter name:");
+  async function createPlaylist() {
+    const name = window.prompt("Enter name of playlist:");
     if (name === null) return;
 
-    const country = window.prompt("Enter country:");
-    if (country === null) return;
+    const privatePlaylist = window.confirm("Is the playlist private? Click 'OK' if YES and 'CANCEL if NO");;
+    // console.log(privatePlaylist);
 
-    if (!name || !country) {
-      alert('Name and country cannot be empty!');
+    if (!name) {
+      alert('Name of playlist and song ID cannot be empty!');
     } else {
       const table = document.querySelector('.table-container');
       const loading = document.querySelector('.loading-container');
@@ -80,9 +81,10 @@ function Artists() {
       const resquestJson = {
         "asset": [
           {
-            "@assetType": "artist",
+            "@assetType": "playlist",
             "name": `${name}`,
-            "country": `${country}`
+            "private": privatePlaylist,
+            "songs": []
           }
         ]
       };
@@ -98,7 +100,7 @@ function Artists() {
           'credentials': 'omit'
         });
 
-        if (!response.ok) {   
+        if (!response.ok) {
           loading?.classList.remove('d-flex');
           loading?.classList.add('d-none');
 
@@ -107,8 +109,8 @@ function Artists() {
           table?.classList.remove('d-none');
           table?.classList.add('d-flex');
           loading?.classList.add('d-none');
-  
-          alert("Artist created successfully!");
+
+          alert("Playlist created successfully!");
           window.location.reload();
         }
 
@@ -121,7 +123,7 @@ function Artists() {
     }
   }
 
-  async function deleteArtist(name: string) {
+  async function deletePlaylist(name: string) {
     const table = document.querySelector('.table-container');
     const loading = document.querySelector('.loading-container');
 
@@ -131,7 +133,7 @@ function Artists() {
 
     const requestJson = {
       "key": {
-        "@assetType": "artist",
+        "@assetType": "playlist",
         "name": `${name}`
       }
     };
@@ -147,7 +149,7 @@ function Artists() {
         'credentials': 'omit'
       });
 
-      if (!response.ok) {   
+      if (!response.ok) {
         loading?.classList.remove('d-flex');
         loading?.classList.add('d-none');
 
@@ -157,7 +159,7 @@ function Artists() {
         table?.classList.add('d-flex');
         loading?.classList.add('d-none');
 
-        alert("Artist deleted successfully!");
+        alert("Playlist deleted successfully!");
         window.location.reload();
       }
 
@@ -168,99 +170,48 @@ function Artists() {
       setError(err.message);
     }
   }
-
-  async function updateArtist(name: string) {
-    const country = window.prompt("Enter new country name:");
-    if (country === null) return;
-
-    if (!country) {
-      alert("New country name must not be empty!");
-    } else {
-      const table = document.querySelector('.table-container');
-      const loading = document.querySelector('.loading-container');
-
-      table?.classList.add('d-none');
-      loading?.classList.remove('d-none');
-      loading?.classList.add('d-flex');
-
-      const requestJson = {
-        "update": {
-          "@assetType": "artist",
-          "name": `${name}`,
-          "country": `${country}`
-        }
-      };
-
-      try {
-        const response = await fetch('http://ec2-54-91-215-149.compute-1.amazonaws.com/api/invoke/updateAsset', {
-          'method': 'PUT',
-          'headers': {
-            'Authorization': `Basic ${credentials}`,
-            'Content-Type': 'application/json'
-          },
-          'body': JSON.stringify(requestJson),
-          'credentials': 'omit'
-        });
-
-        if (!response.ok) {
-          loading?.classList.remove('d-flex');
-          loading?.classList.add('d-none');
-
-          throw new Error(`Error fetching data. Status: ${response.statusText}`);
-        } else {
-          table?.classList.remove('d-none');
-          table?.classList.add('d-flex');
-          loading?.classList.add('d-none');
-
-          alert("Country name updated successfully!");
-          window.location.reload();
-        }
-
-      } catch (ex) {
-        const err = ex as Error;
-
-        setLoading(true);
-        setError(err.message);
-      }
-    }
-  }
   
   return (
     <>
       <div className='table-container'>
         <div className='title'>
-          <h1>ARTISTS</h1>
+          <h1>PLAYLISTS</h1>
+          <Link to="/">
+            <strong>Go to ARTISTS</strong>
+          </Link>
           <Link to="/album">
             <strong>Go to ALBUMS</strong>
           </Link>
           <Link to="/song">
             <strong>Go to SONGS</strong>
           </Link>
-          <Link to="/playlist">
-            <strong>Go to PLAYLISTS</strong>
-          </Link>
         </div>
-        <button onClick={createArtist}>Create new artist</button>
+        <button onClick={createPlaylist}>Create new playlist</button>
         <input
           type="text"
           placeholder="Search by name"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        {filteredArtists.map((item: Artist, index: number) => (
+        {filteredPlaylist.map((item: Playlist, index: number) => (
           <table key={index}>
             <thead>
               <tr>
-                <td>Country</td>
                 <td>Name</td>
+                <td>Songs</td>
                 <td></td>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>{item.country}</td>
                 <td>{item.name}</td>
-                <td><button onClick={() => updateArtist(item.name)}>edit</button><button onClick={() => deleteArtist(item.name)}>delete</button></td>
+                <td>{item.songs?.map((song: {"@key": string}, index: number) => (
+                  <p key={index}>{song["@key"]}</p>
+                ))}</td>
+                <td>
+                  <button onClick={() => deletePlaylist(item.name)}>delete</button>
+                  {/* <BasicModal /> */}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -271,9 +222,9 @@ function Artists() {
         <div className="loading-text">Loading...</div>
       </div>
       {loading && (<p>{error}</p>)}
-      {filteredArtists.length === 0 && <p>No artists found.</p>}
+      {filteredPlaylist.length === 0 && <p>No artists found.</p>}
     </>
   );
 }
 
-export default Artists;
+export default Playlists;

@@ -187,6 +187,9 @@ function Songs() {
           <Link to="/album">
             <strong>Go to ALBUMS</strong>
           </Link>
+          <Link to="/playlist">
+            <strong>Go to PLAYLISTS</strong>
+          </Link>
         </div>
         <button onClick={createSong}>Create new song</button>
         <input

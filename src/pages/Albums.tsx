@@ -266,6 +266,9 @@ function Albums() {
           <Link to="/song">
             <strong>Go to SONGS</strong>
           </Link>
+          <Link to="/playlist">
+            <strong>Go to PLAYLISTS</strong>
+          </Link>
         </div>
         <button onClick={createAlbum}>Create new album</button>
         <input
