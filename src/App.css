@@ -130,6 +130,20 @@ a:hover {
   color: darkgray;
 }
 
+button {
+  padding: 8px;
+  background-color: rgb(71, 71, 234);
+  cursor: pointer;
+  border-radius: 8px;
+  color: #FFFFFF;
+  border: 1px solid rgb(71, 71, 234);
+  margin: 0 5px;
+}
+
+button:hover {
+  background-color: rgb(93, 93, 235);
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

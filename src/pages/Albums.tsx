@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../App.css';
 import { Link } from 'react-router';
+import BasicButton from '../components/Button'
 
 function Albums() {
   interface Album {
@@ -138,7 +139,7 @@ function Albums() {
   }
 
   async function updateAlbum(name: string, id: string) {
-    const year = window.prompt("Enter new year of album:") ?? "";
+    const year = window.prompt("Enter new year of album:") ?? null;
     if (year === null) {
       return;
     } else if (!/^\d+$/.test(year)) {
@@ -238,7 +239,7 @@ function Albums() {
         loading?.classList.remove('d-flex');
         loading?.classList.add('d-none');
 
-        throw new Error(`Error fetching data. Status: ${response.statusText}`);
+        throw new Error(`Error deleting album. Status: ${response.statusText}`);
       } else {
         table?.classList.remove('d-none');
         table?.classList.add('d-flex');
