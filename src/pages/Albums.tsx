@@ -239,7 +239,7 @@ function Albums() {
         loading?.classList.remove('d-flex');
         loading?.classList.add('d-none');
 
-        throw new Error(`Error deleting album. Status: ${response.statusText}`);
+        throw new Error(`Status: ${response.statusText}. There is reference content to this album.`);
       } else {
         table?.classList.remove('d-none');
         table?.classList.add('d-flex');

@@ -159,7 +159,7 @@ function Songs() {
         loading?.classList.remove('d-flex');
         loading?.classList.add('d-none');
 
-        throw new Error(`Error fetching data. Status: ${response.statusText}`);
+        throw new Error(`Status: ${response.statusText}. There is reference content to this song.`);
       } else {
         table?.classList.remove('d-none');
         table?.classList.add('d-flex');

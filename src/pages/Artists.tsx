@@ -152,7 +152,7 @@ function Artists() {
         loading?.classList.remove('d-flex');
         loading?.classList.add('d-none');
 
-        throw new Error(`Error fetching data. Status: ${response.statusText}`);
+        throw new Error(`Status: ${response.statusText}. There is reference content to this artist.`);
       } else {
         table?.classList.remove('d-none');
         table?.classList.add('d-flex');
@@ -252,15 +252,15 @@ function Artists() {
           <table key={index}>
             <thead>
               <tr>
-                <td>Country</td>
                 <td>Name</td>
+                <td>Country</td>
                 <td></td>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>{item.country}</td>
                 <td>{item.name}<p>{item['@key']}</p></td>
+                <td>{item.country}</td>
                 <td><button onClick={() => updateArtist(item.name)}>edit</button><button onClick={() => deleteArtist(item.name)}>delete</button></td>
               </tr>
             </tbody>
