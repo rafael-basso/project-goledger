@@ -285,7 +285,7 @@ function Playlists() {
             <thead>
               <tr>
                 <td>Name</td>
-                <td>Songs</td>
+                <td>Songs/ID</td>
                 <td></td>
               </tr>
             </thead>
