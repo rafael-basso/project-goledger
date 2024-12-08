@@ -231,6 +231,32 @@ function Playlists() {
       setError(err.message);
     }
   }
+
+  async function getSongName(id: string) {
+    const getSong = {
+      "query": {
+        "selector": {
+          "@assetType": "song",
+          "@key": `${id}`
+        }
+      }
+    };
+
+    const responseSong = await fetch('http://ec2-54-91-215-149.compute-1.amazonaws.com/api/query/search', {
+      'method': 'POST',
+      'headers': {
+        'Authorization': `Basic ${credentials}`,
+        'Content-Type': 'application/json'
+      },
+      'body': JSON.stringify(getSong),
+    });
+
+    if (!responseSong.ok) throw new Error(`Error fetching data. Status: ${responseSong.statusText}`);
+
+    const artistName = await responseSong.json();
+    // console.log(artistName.result[0].name);
+    artistName.result.map((x:{name: string}) => alert(x.name));
+}
   
   return (
     <>
@@ -266,12 +292,17 @@ function Playlists() {
             <tbody>
               <tr>
                 <td>{item.name}</td>
-                <td>{item.songs?.map((song: {"@key": string}, index: number) => (
-                  <p key={index}>{song["@key"]}</p>
-                ))}</td>
+                <td>{item.songs?.map((song: {"@key": string}) => (
+                      <>
+                      <p>{song["@key"]}
+                        <button onClick={() => getSongName(song["@key"])}>view name</button>
+                      </p>
+                      </>
+                    ))}
+                </td>
                 <td>
                   <button onClick={() => deletePlaylist(item.name)}>delete</button>
-                  <button onClick={() => addSong(item)}>add song</button>
+                  <button onClick={() => addSong(item)}>add song</button>                  
                 </td>
               </tr>
             </tbody>

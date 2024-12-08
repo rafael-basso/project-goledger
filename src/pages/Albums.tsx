@@ -8,9 +8,11 @@ function Albums() {
     name: string;
     year: number;
     "@key": string;
-    artist: { "@key": string }
+    artist: { "@key": string };
+    artistName: string
   }
 
+  const [artist, setArtist] = useState('');
   const [album, setAlbum] = useState<Album[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -42,7 +44,7 @@ function Albums() {
         if (!response.ok) throw new Error(`Error fetching data. Status: ${response.statusText}`);
 
         const res = await response.json();
-        // console.log(res.result);
+        // console.log(res.result);        
         setAlbum(res.result);
         setFilteredAlbum(res.result);
       } catch (ex) {
@@ -62,6 +64,32 @@ function Albums() {
     );
     setFilteredAlbum(results);
   }, [searchTerm, album]);
+
+  async function getArtistName(id: string) {
+      const getArtist = {
+        "query": {
+          "selector": {
+            "@assetType": "artist",
+            "@key": `${id}`
+          }
+        }
+      };
+
+      const responseArtist = await fetch('http://ec2-54-91-215-149.compute-1.amazonaws.com/api/query/search', {
+        'method': 'POST',
+        'headers': {
+          'Authorization': `Basic ${credentials}`,
+          'Content-Type': 'application/json'
+        },
+        'body': JSON.stringify(getArtist),
+      });
+
+      if (!responseArtist.ok) throw new Error(`Error fetching data. Status: ${responseArtist.statusText}`);
+
+      const artistName = await responseArtist.json();
+      // console.log(artistName.result[0].name);
+      artistName.result.map((x:{name: string}) => alert(x.name));
+  }
 
   async function createAlbum() {
     const name = window.prompt("Enter name of album:");
@@ -214,6 +242,7 @@ function Albums() {
     loading?.classList.add('d-flex');
 
     const requestJson = {
+      "cascade": true,
       "key": {
         "@assetType": "album",
         "name": `${name}`,
@@ -283,7 +312,7 @@ function Albums() {
           <table key={index}>
             <thead>
               <tr>
-                <td>Name</td>
+                <td>Name/ID</td>
                 <td>Year</td>
                 <td></td>
               </tr>
@@ -292,7 +321,11 @@ function Albums() {
               <tr>
                 <td>{item.name}<p>{item['@key']}</p></td>
                 <td>{item.year}</td>
-                <td><button onClick={() => updateAlbum(item.name, item.artist["@key"])}>edit</button><button onClick={() => deleteAlbum(item.name, item.artist["@key"])}>delete</button></td>
+                <td>
+                  <button onClick={() => updateAlbum(item.name, item.artist["@key"])}>edit</button>
+                  <button onClick={() => deleteAlbum(item.name, item.artist["@key"])}>delete</button>
+                  <button onClick={() => getArtistName(item.artist["@key"])}>view artist</button>
+                </td>
               </tr>
             </tbody>
           </table>

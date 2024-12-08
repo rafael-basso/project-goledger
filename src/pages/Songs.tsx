@@ -134,6 +134,7 @@ function Songs() {
     loading?.classList.add('d-flex');
 
     const requestJson = {
+      "cascade": true,
       "key": {
         "@assetType": "song",
         "name": `${name}`,
@@ -176,6 +177,32 @@ function Songs() {
       setError(err.message);
     }
   }
+
+  async function getAlbumName(id: string) {
+    const getAlbum = {
+      "query": {
+        "selector": {
+          "@assetType": "album",
+          "@key": `${id}`
+        }
+      }
+    };
+
+    const responseAlbum = await fetch('http://ec2-54-91-215-149.compute-1.amazonaws.com/api/query/search', {
+      'method': 'POST',
+      'headers': {
+        'Authorization': `Basic ${credentials}`,
+        'Content-Type': 'application/json'
+      },
+      'body': JSON.stringify(getAlbum),
+    });
+
+    if (!responseAlbum.ok) throw new Error(`Error fetching data. Status: ${responseAlbum.statusText}`);
+
+    const artistName = await responseAlbum.json();
+    // console.log(artistName.result[0].name);
+    artistName.result.map((x:{name: string}) => alert(x.name));
+}
   
   return (
     <>
@@ -203,14 +230,17 @@ function Songs() {
           <table key={index}>
             <thead>
               <tr>
-                <td>Name</td>
+                <td>Name/ID</td>
                 <td></td>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>{item.name}<p>{item['@key']}</p></td>
-                <td><button onClick={() => deleteSong(item.name, item.album["@key"])}>delete</button></td>
+                <td>
+                  <button onClick={() => deleteSong(item.name, item.album["@key"])}>delete</button>
+                  <button onClick={() => getAlbumName(item.album["@key"])}>see albums's name</button>
+                </td>
               </tr>
             </tbody>
           </table>

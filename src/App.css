@@ -53,6 +53,15 @@ tbody tr:nth-child(even) {
 tbody tr td:first-child {
   font-weight: 500;
   color: #333;
+  width: 40%;
+}
+
+tbody tr td:nth-child(2) {
+  width: 40%;
+}
+
+tbody tr td:last-child {
+  width: 20%;
 }
 
 /* Optional: Last Row Emphasis */
@@ -113,8 +122,13 @@ th.sortable:hover {
   margin: 0;
 }
 
-.table-container table thead tr td {
-  width: 33%;
+.table-container table thead tr td:first-child
+.table-container table thead tr:nth-child(2) {
+  width: 40%;
+}
+
+.table-container table thead tr:last-child {
+  width: 20%;
 }
 
 .table-container input {

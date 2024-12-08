@@ -131,6 +131,7 @@ function Artists() {
     loading?.classList.add('d-flex');
 
     const requestJson = {
+      "cascade": true,
       "key": {
         "@assetType": "artist",
         "name": `${name}`
@@ -252,7 +253,7 @@ function Artists() {
           <table key={index}>
             <thead>
               <tr>
-                <td>Name</td>
+                <td>Name/ID</td>
                 <td>Country</td>
                 <td></td>
               </tr>

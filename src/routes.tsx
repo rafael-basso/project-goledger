@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router'
 import Artists from './pages/Artists'
 import Albums from './pages/Albums'
-import { JsxElement } from 'typescript'
 import Songs from './pages/Songs'
 import Playlists from './pages/Playlists'
 
